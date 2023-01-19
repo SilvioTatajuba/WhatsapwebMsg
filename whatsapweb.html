@@ -1,0 +1,87 @@
+<HTML>
+
+<style>
+input, button{
+  display: block;
+  padding: 10px;
+  border: 1px solid grey;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+textarea {
+    width:400px;
+	height:100px;
+	border: 2px solid #990000;
+	
+}
+
+</style>
+
+<SCRIPT>
+function enviarMensagem(){
+	var celular = document.querySelector("#celular").value;
+  celular = celular.replace(/\D/g,''); //Deixar apenas números
+  
+  //Verificar se tem DDI e adicionar se não tiver
+  if(celular.length < 13){
+  	celular = "55" + celular;
+  }
+  
+  var texto = document.querySelector("#mensagem").value;
+  texto = window.encodeURIComponent(texto);
+  
+  window.open("https://api.whatsapp.com/send?phone=" + celular + "&text=" + texto, "_blank");
+	//Obs.. use "_system", no lugar de blank, caso você esteja usando Phonegap / Cordova / Ionic ou qualquer um baseado em webview;
+}
+
+function mask(o, f) {
+  setTimeout(function() {
+    var v = mcelular(o.value);
+    if (v != o.value) {
+      o.value = v;
+    }
+  }, 1);
+}
+
+function mcelular(v) {
+  var r = v.replace(/\D/g, "");
+  r = r.replace(/^0/, "");
+
+  if (r.length > 10) {
+  
+    r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1) $2-$3");
+		
+	
+  } else if (r.length > 5) {
+    r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+  } else if (r.length > 2) {
+    r = r.replace(/^(\d\d)(\d{0,5})/, "($1) $2");
+  } else {
+    r = r.replace(/^(\d*)/, "($1");
+  }
+  return r;
+}
+
+</SCRIPT>
+
+<BODY>
+<h1> WHATSAPP WEB MESSAGE</H1>
+	<p>
+
+	 #          Mantenha conectada sessao WhatsApp Web/Computador com seu celular         #
+
+		</p>
+	<p>Digite número do telefone com DDD</p>
+	<input type="text" id="celular" onblur="mask(this, mcelular);" placeholder="Digite numero do telefone com DDD">
+		<textarea  id="mensagem" placeholder="digite a mensagem">
+		Boa tarde, Sou <Nome> do TI. Em que posso ajudar?
+		Qual número do chamado?
+		</textarea>
+	</input>
+<p>
+	<button onclick="enviarMensagem()">
+	Enviar Mensagem
+	</button>
+</BODY>
+</HTML>
